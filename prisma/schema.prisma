@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                String             @id @default(uuid())
+  name              String?
+  email             String             @unique
+  password          String
+  role              UserRole
+  business_name     String?
+  business_type     BusinessType?
+  business_category BusinessCategory[]
+  status            UserStatus?
+  isActive          Boolean            @default(true)
+  branches          String?
+  phone_number      String?
+  business_address  String?
+  city              String?
+  area              String?
+  postal_code       String?
+  storefrontPhoto   String?
+  companyLogo       String?
+  products          AddProduct[]
+
+  verificationCode  String?
+  codeExpireAt      DateTime?
+}
+
+
+enum UserStatus {
+  approved
+  pending
+}
+
+enum UserRole {
+  customer
+  shop_owner
+  admin
+}
+
+enum BusinessType {
+  Restaurant
+  Shop
+}
+
+enum BusinessCategory {
+  Pizza
+  Burger
+  Coffee
+  Dessert
+  IceCream
+  Sandwich
+  Salad
+  Pasta
+  Seafood
+  Other
+}
+
+model Category {
+  id        Int          @id @default(autoincrement())
+  name      String
+  isDeleted Boolean      @default(false)
+  products  AddProduct[]
+}
+
+model AddProduct {
+  id             String           @id @default(uuid())
+  shopOwnerId    String
+  user           User             @relation(fields: [shopOwnerId], references: [id])
+  categoryId     Int
+  category       Category         @relation(fields: [categoryId], references: [id])
+  currency       String
+  quantity       Int
+  price          Float
+  description    String
+  imageUrl       String?
+  status         AddProductStatus
+  isPublished    Boolean          @default(true)
+  discountActive Boolean          @default(false)
+  isDeleted      Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+enum AddProductStatus {
+  Visible
+  Invisible
+}

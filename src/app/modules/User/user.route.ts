@@ -34,7 +34,7 @@ router.patch(
 
 router.patch(
   "/change-password",
-  // RoleValidation(USER_ROLE.admin, USER_ROLE.marchant),
+  RoleValidation(UserRole.admin, UserRole.customer, UserRole.shop_owner),
   UserDataController.changePassword
 );
 router.delete(

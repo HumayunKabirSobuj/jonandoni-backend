@@ -119,27 +119,206 @@ const loginUser = async (data: { email: string; password: string }) => {
     to: userData.email,
     subject: "🔐 Verify Your Login - One Time Password (OTP)",
     html: `
-        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; background: #f4f7fb; padding: 40px; border-radius: 12px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #4CAF50; margin: 0; font-size: 28px;">My Shop</h1>
-            <p style="color: #777; margin: 5px 0;">Secure Login Verification</p>
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login Verification</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+          
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          
+          body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+          }
+          
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          }
+          
+          .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+          }
+          
+          .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+          }
+          
+          .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+          }
+          
+          .content {
+            padding: 50px 40px;
+            text-align: center;
+          }
+          
+          .welcome-text {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 16px;
+            line-height: 1.3;
+          }
+          
+          .description {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 40px;
+            line-height: 1.6;
+          }
+          
+          .otp-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            position: relative;
+          }
+          
+          .otp-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+          }
+          
+          .otp-code {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1e40af;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            border: 2px solid #ddd6fe;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.1);
+          }
+          
+          .timer {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin: 30px 0;
+            display: inline-block;
+          }
+          
+          .timer-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #92400e;
+          }
+          
+          .security-notice {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+          }
+          
+          .security-notice p {
+            font-size: 14px;
+            color: #991b1b;
+            font-weight: 500;
+            margin: 0;
+          }
+          
+          .footer {
+            background: #f9fafb;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+          }
+          
+          .footer p {
+            font-size: 13px;
+            color: #6b7280;
+            margin: 4px 0;
+          }
+          
+          .footer .company {
+            font-weight: 600;
+            color: #374151;
+          }
+          
+          @media only screen and (max-width: 600px) {
+            body { padding: 10px; }
+            .container { border-radius: 16px; }
+            .header { padding: 30px 20px; }
+            .header h1 { font-size: 28px; }
+            .content { padding: 40px 20px; }
+            .welcome-text { font-size: 20px; }
+            .otp-code { 
+              font-size: 36px; 
+              letter-spacing: 4px;
+              padding: 16px 20px;
+            }
+            .footer { padding: 20px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>My Shop</h1>
+            <p>Secure Login Verification</p>
           </div>
-          <div style="background: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 2px 8px rgba(0,0,0,0.05); text-align: center;">
-            <h2 style="color: #333; margin-bottom: 15px;">Your Verification Code</h2>
-            <p style="color: #555; margin-bottom: 20px;">Use the following code to complete your login. It will expire in <b>5 minutes</b>.</p>
-            <div style="display: inline-block; padding: 15px 30px; background: #4CAF50; color: #fff; font-size: 32px; letter-spacing: 8px; border-radius: 8px; font-weight: bold;">
-              ${otp}
-            </div>
-            <p style="color: #999; font-size: 13px; margin-top: 20px;">
-              ⚠️ Do not share this code with anyone for security reasons.
+          
+          <div class="content">
+            <h2 class="welcome-text">Verify Your Login</h2>
+            <p class="description">
+              We've sent you a secure verification code to complete your login. 
+              Enter the code below to access your account.
             </p>
+            
+            <div class="otp-container">
+              <div class="otp-label">Your Verification Code</div>
+              <div class="otp-code">${otp}</div>
+            </div>
+            
+            <div class="timer">
+              <div class="timer-text">⏰ This code expires in 5 minutes</div>
+            </div>
+            
+            <div class="security-notice">
+              <p>🔒 For your security, never share this code with anyone. Our team will never ask for your verification code.</p>
+            </div>
           </div>
-          <div style="text-align: center; margin-top: 30px; color: #aaa; font-size: 12px;">
-            <p>If you did not request this, you can safely ignore this email.</p>
-            <p>© ${new Date().getFullYear()} My Shop. All Rights Reserved.</p>
+          
+          <div class="footer">
+            <p>If you didn't request this verification, you can safely ignore this email.</p>
+            <p class="company">© ${new Date().getFullYear()} My Shop. All rights reserved.</p>
           </div>
         </div>
-      `,
+      </body>
+      </html>
+    `,
   });
 
   return { message: "Verification code sent to your email." };
@@ -147,7 +326,7 @@ const loginUser = async (data: { email: string; password: string }) => {
 
 const verifyLogin = async (data: { email: string; code: string }) => {
   const userData = await prisma.user.findUnique({
-    where: { email: data.email , isDeleted:false},
+    where: { email: data.email, isDeleted: false },
   });
 
   if (!userData) {

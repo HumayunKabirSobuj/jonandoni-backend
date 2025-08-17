@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // directUrl = env("DIRECT_URL")
 }
 
@@ -32,6 +32,8 @@ model User {
   verificationCode String?
   codeExpireAt     DateTime?
   isDeleted        Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 enum UserStatus {
@@ -51,22 +53,24 @@ enum BusinessType {
 }
 
 enum BusinessCategory {
-  Pizza
-  Burger
-  Coffee
-  Dessert
-  IceCream
-  Sandwich
-  Salad
-  Pasta
-  Seafood
+  Restaurant
+  Grocery
+  Electronics
+  Fashion
+  Pharmacy
+  Bakery
+  Cafe
+  Bookstore
+  Furniture
   Other
 }
 
 model Category {
-  id        Int          @id @default(autoincrement())
+  id        String       @id @default(uuid())
   name      String
   isDeleted Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
   products  AddProduct[]
 }
 
@@ -74,7 +78,7 @@ model AddProduct {
   id             String           @id @default(uuid())
   shopOwnerId    String
   user           User             @relation(fields: [shopOwnerId], references: [id])
-  categoryId     Int
+  categoryId     String
   category       Category         @relation(fields: [categoryId], references: [id])
   currency       String
   quantity       Int

@@ -90,6 +90,17 @@ const changePassword = catchAsync(async (req: Request & { user?: any }, res) => 
     data: result,
   });
 });
+const getShopOwnerRequests = catchAsync(async (req: Request & { user?: any }, res) => {
+  const result = await UserDataServices.getShopOwnerRequests(req.query);
+
+  //   console.log(req.user);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Shop_Owner Requests Fetched Successfuly.",
+    data: result,
+  });
+});
 
 
 export const UserDataController = {
@@ -99,5 +110,6 @@ export const UserDataController = {
   deleteUser,
   myProfileInfo,
   updateProfile,
-  changePassword
+  changePassword,
+  getShopOwnerRequests
 };

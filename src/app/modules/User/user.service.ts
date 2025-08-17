@@ -49,7 +49,7 @@ const getAllUsers = async (options: any) => {
 const myProfileInfo = async (id: string) => {
   const result = await prisma.user.findUnique({
     where: {
-      id
+      id,
     },
   });
 
@@ -191,6 +191,63 @@ const changePassword = async (
   });
 };
 
+
+const getShopOwnerRequests = async (options: any) => {
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelper.calculatePagination(options);
+
+  const dynamicFilters = buildDynamicFilters(options, UserSearchableFields);
+
+  const whereConditions = {
+    AND: [
+      dynamicFilters, // existing dynamic filters
+      { role: "shop_owner" },
+      { status: "pending" },
+    ],
+  };
+
+  const total = await prisma.user.count({
+    where: whereConditions,
+  });
+
+  const users = await prisma.user.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder, // Dynamic sort field
+    },
+   
+  });
+
+  const meta = {
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
+
+  return {
+    data: users,
+    meta,
+  };
+};
+
+
+
+// const getShopOwnerRequests = async () => {
+//   // console.log("get requestes...")
+
+//   const result = await prisma.user.findMany({
+//     where: {
+//       role: "shop_owner",
+//       status: "pending",
+//     },
+//   });
+
+//   return result;
+// };
+
 export const UserDataServices = {
   getAllUsers,
   changeRole,
@@ -199,4 +256,5 @@ export const UserDataServices = {
   myProfileInfo,
   updateProfile,
   changePassword,
+  getShopOwnerRequests,
 };

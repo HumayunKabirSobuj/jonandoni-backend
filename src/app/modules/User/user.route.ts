@@ -15,17 +15,12 @@ router.get(
   RoleValidation(UserRole.admin, UserRole.customer, UserRole.shop_owner),
   UserDataController.myProfileInfo
 );
-router.patch(
-  "/change-role/:id",
-  // RoleValidation(USER_ROLE.admin),
-  UserDataController.changeRole
+router.get(
+  "/get-shopowner-requests",
+  RoleValidation(UserRole.admin),
+  UserDataController.getShopOwnerRequests
 );
 
-router.patch(
-  "/change-status/:id",
-  // RoleValidation(USER_ROLE.admin),
-  UserDataController.changeUserStatus
-);
 router.patch(
   "/update-profile",
   RoleValidation(UserRole.admin, UserRole.customer, UserRole.shop_owner),
@@ -37,6 +32,23 @@ router.patch(
   RoleValidation(UserRole.admin, UserRole.customer, UserRole.shop_owner),
   UserDataController.changePassword
 );
+
+
+
+
+
+router.patch(
+  "/change-role/:id",
+  // RoleValidation(USER_ROLE.admin),
+  UserDataController.changeRole
+);
+
+router.patch(
+  "/change-status/:id",
+  // RoleValidation(USER_ROLE.admin),
+  UserDataController.changeUserStatus
+);
+
 router.delete(
   "/delete-user/:id",
   // RoleValidation(USER_ROLE.admin),

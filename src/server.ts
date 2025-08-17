@@ -29,7 +29,7 @@ const port = 5000;
 
 async function createAdmin() {
   try {
-    const adminEmail = "admin@gmail.com"; // অ্যাডমিনের email
+    const adminEmail ="humayun506034@gmail.com"; // অ্যাডমিনের email
 
     // email দিয়ে চেক করা
     const existingAdmin = await prisma.user.findUnique({

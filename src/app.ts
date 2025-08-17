@@ -16,7 +16,7 @@ const app: Application = express();
 //   })
 // );
 app.use(cors({
-  origin: ["https://unnig-couier.vercel.app","http://localhost:5173"],
+  origin: ["*"],
   credentials: true,
 }));
 
@@ -30,7 +30,7 @@ app.use("/api", router);
 app.use(globalErrorHandler);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("UUING Curier Service Server is running");
+  res.send("Food Delivery Server is running");
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {

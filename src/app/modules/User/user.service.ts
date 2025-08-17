@@ -5,6 +5,7 @@ import AppError from "../../Errors/AppError";
 import status from "http-status";
 import { buildDynamicFilters } from "../../../helpers/buildDynamicFilters";
 import bcrypt from "bcrypt";
+import { UserStatus } from "@prisma/client";
 
 const getAllUsers = async (options: any) => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -47,14 +48,15 @@ const getAllUsers = async (options: any) => {
 
 const myProfileInfo = async (id: string) => {
   const result = await prisma.user.findUnique({
-    where: { id },
-   
+    where: {
+      id
+    },
   });
 
   return result;
 };
 
-const changeRole = async (id: string, data: { role:any}) => {
+const changeRole = async (id: string, data: { role: any }) => {
   const result = await prisma.$transaction(async (tx) => {
     const isUserExist = await tx.user.findUnique({
       where: { id },
@@ -73,7 +75,6 @@ const changeRole = async (id: string, data: { role:any}) => {
       data: {
         role: data.role,
       },
-    
     });
 
     return updatedUser;
@@ -85,7 +86,7 @@ const changeRole = async (id: string, data: { role:any}) => {
 const changeUserStatus = async (id: string, data: { status: any }) => {
   const result = await prisma.$transaction(async (tx) => {
     const isUserExist = await tx.user.findUnique({
-      where: { id: id, },
+      where: { id: id },
     });
 
     if (!isUserExist) {
@@ -101,7 +102,6 @@ const changeUserStatus = async (id: string, data: { status: any }) => {
       data: {
         status: data.status,
       },
-     
     });
 
     return updatedUser;
@@ -115,7 +115,6 @@ const deleteUser = async (id: string) => {
     const isUserExist = await tx.user.findUnique({
       where: {
         id: id,
-        
       },
     });
 
@@ -128,9 +127,7 @@ const deleteUser = async (id: string) => {
       where: {
         id,
       },
-      data: {
-        
-      },
+      data: {},
     });
 
     return null;
@@ -139,7 +136,7 @@ const deleteUser = async (id: string) => {
   return result;
 };
 
-const updateProfile = async (id: string, payload:any) => {
+const updateProfile = async (id: string, payload: any) => {
   try {
     const result = await prisma.user.update({
       where: { id },
@@ -163,7 +160,7 @@ const changePassword = async (
   return await prisma.$transaction(async (tx) => {
     // 1️⃣ Find the user
     const user = await tx.user.findUnique({
-      where: { id: userId,  },
+      where: { id: userId },
       select: { password: true },
     });
 
@@ -194,7 +191,6 @@ const changePassword = async (
   });
 };
 
-
 export const UserDataServices = {
   getAllUsers,
   changeRole,
@@ -202,5 +198,5 @@ export const UserDataServices = {
   deleteUser,
   myProfileInfo,
   updateProfile,
-  changePassword
+  changePassword,
 };

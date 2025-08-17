@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -29,10 +29,10 @@ model User {
   companyLogo       String?
   products          AddProduct[]
 
-  verificationCode  String?
-  codeExpireAt      DateTime?
+  verificationCode String?
+  codeExpireAt     DateTime?
+  isDeleted        Boolean   @default(false)
 }
-
 
 enum UserStatus {
   approved

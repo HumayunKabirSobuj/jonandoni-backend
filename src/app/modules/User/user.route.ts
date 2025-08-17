@@ -2,6 +2,7 @@ import express from "express";
 
 import RoleValidation from "../../middlewares/RoleValidation";
 import { UserDataController } from "./user.controller";
+import { UserRole } from "@prisma/client";
 const router = express.Router();
 
 router.get(
@@ -11,7 +12,7 @@ router.get(
 );
 router.get(
   "/my-profile-info",
-  // RoleValidation(USER_ROLE.admin, USER_ROLE.marchant),
+  RoleValidation(UserRole.admin, UserRole.customer, UserRole.shop_owner),
   UserDataController.myProfileInfo
 );
 router.patch(
@@ -27,7 +28,7 @@ router.patch(
 );
 router.patch(
   "/update-profile",
-  // RoleValidation(USER_ROLE.admin, USER_ROLE.marchant),
+  RoleValidation(UserRole.admin, UserRole.customer, UserRole.shop_owner),
   UserDataController.updateProfile
 );
 
@@ -42,4 +43,4 @@ router.delete(
   UserDataController.deleteUser
 );
 
-export const UserDataRoutes = router;
+export const UserRoutes = router;

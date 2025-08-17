@@ -16,7 +16,7 @@ const createUser = async (data: User) => {
 
   // 2️⃣ Check if user already exists
   const isUserExist = await prisma.user.findFirst({
-    where: { email: data.email },
+    where: { email: data.email, isDeleted: false },
   });
   if (isUserExist) {
     throw new AppError(status.CONFLICT, "User Already Exist!");
@@ -67,7 +67,12 @@ const createUser = async (data: User) => {
 
 const loginUser = async (data: { email: string; password: string }) => {
   const userData = await prisma.user.findFirst({
-    where: { email: data.email, isActive: true },
+    where: {
+      email: data.email,
+      isActive: true,
+      isDeleted: false,
+      status: UserStatus.approved,
+    },
   });
 
   if (!userData) {
@@ -142,7 +147,7 @@ const loginUser = async (data: { email: string; password: string }) => {
 
 const verifyLogin = async (data: { email: string; code: string }) => {
   const userData = await prisma.user.findUnique({
-    where: { email: data.email },
+    where: { email: data.email , isDeleted:false},
   });
 
   if (!userData) {

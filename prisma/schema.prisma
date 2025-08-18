@@ -80,13 +80,12 @@ model AddProduct {
   user           User             @relation(fields: [shopOwnerId], references: [id])
   categoryId     String
   category       Category         @relation(fields: [categoryId], references: [id])
-  currency       String
   quantity       Int
   price          Float
   description    String
   imageUrl       String?
-  status         AddProductStatus
-  isPublished    Boolean          @default(true)
+  status         AddProductStatus @default(Invisible)
+  isPublished    Boolean          @default(false)
   discountActive Boolean          @default(false)
   isDeleted      Boolean          @default(false)
   createdAt      DateTime         @default(now())

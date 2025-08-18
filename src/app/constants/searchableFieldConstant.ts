@@ -1,5 +1,5 @@
 
-export const UserSearchableFields: string[] = ["name", "email","business_name"];
+export const shopOwnerSearchableFields: string[] = ["email","business_name"];
 
 
 

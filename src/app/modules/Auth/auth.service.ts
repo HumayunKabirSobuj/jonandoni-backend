@@ -71,7 +71,6 @@ const loginUser = async (data: { email: string; password: string }) => {
       email: data.email,
       isActive: true,
       isDeleted: false,
-      status: UserStatus.approved,
     },
   });
 

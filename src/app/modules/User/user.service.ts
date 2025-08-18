@@ -1,6 +1,6 @@
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import prisma from "../../../shared/prisma";
-import { UserSearchableFields } from "../../constants/searchableFieldConstant";
+import { shopOwnerSearchableFields } from "../../constants/searchableFieldConstant";
 import AppError from "../../Errors/AppError";
 import status from "http-status";
 import { buildDynamicFilters } from "../../../helpers/buildDynamicFilters";
@@ -11,7 +11,10 @@ const getAllUsers = async (options: any) => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelper.calculatePagination(options);
 
-  const whereConditions = buildDynamicFilters(options, UserSearchableFields);
+  const whereConditions = buildDynamicFilters(
+    options,
+    shopOwnerSearchableFields
+  );
 
   const total = await prisma.user.count({
     where: whereConditions,
@@ -191,12 +194,14 @@ const changePassword = async (
   });
 };
 
-
 const getShopOwnerRequests = async (options: any) => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelper.calculatePagination(options);
 
-  const dynamicFilters = buildDynamicFilters(options, UserSearchableFields);
+  const dynamicFilters = buildDynamicFilters(
+    options,
+    shopOwnerSearchableFields
+  );
 
   const whereConditions = {
     AND: [
@@ -217,7 +222,6 @@ const getShopOwnerRequests = async (options: any) => {
     orderBy: {
       [sortBy]: sortOrder, // Dynamic sort field
     },
-   
   });
 
   const meta = {
@@ -233,20 +237,30 @@ const getShopOwnerRequests = async (options: any) => {
   };
 };
 
+const approvedShopOwnerRequest = async (id: string) => {
+  // console.log("approvewd shop owner request...", id);
 
+  const isUserExist = await prisma.user.findFirst({
+    where: {
+      id: id,
+      role: "shop_owner",
+    },
+  });
 
-// const getShopOwnerRequests = async () => {
-//   // console.log("get requestes...")
+  // console.log(isUserExist)
 
-//   const result = await prisma.user.findMany({
-//     where: {
-//       role: "shop_owner",
-//       status: "pending",
-//     },
-//   });
+  if (!isUserExist) {
+    throw new AppError(status.NOT_FOUND, "User Not Found..");
+  }
 
-//   return result;
-// };
+  return await prisma.user.update({
+    where:{
+      id:id
+    }, data:{
+      status:"approved"
+    }
+  })
+};
 
 export const UserDataServices = {
   getAllUsers,
@@ -257,4 +271,5 @@ export const UserDataServices = {
   updateProfile,
   changePassword,
   getShopOwnerRequests,
+  approvedShopOwnerRequest,
 };

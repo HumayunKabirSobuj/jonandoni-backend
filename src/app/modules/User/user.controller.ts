@@ -101,6 +101,17 @@ const getShopOwnerRequests = catchAsync(async (req: Request & { user?: any }, re
     data: result,
   });
 });
+const approvedShopOwnerRequest = catchAsync(async (req: Request & { user?: any }, res) => {
+  const result = await UserDataServices.approvedShopOwnerRequest(req.params.id);
+
+  //   console.log(req.user);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Shop_Owner Request Approved Successfuly.",
+    data: result,
+  });
+});
 
 
 export const UserDataController = {
@@ -111,5 +122,6 @@ export const UserDataController = {
   myProfileInfo,
   updateProfile,
   changePassword,
-  getShopOwnerRequests
+  getShopOwnerRequests,
+  approvedShopOwnerRequest
 };

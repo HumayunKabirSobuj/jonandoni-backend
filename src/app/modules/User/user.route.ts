@@ -32,6 +32,11 @@ router.patch(
   RoleValidation(UserRole.admin, UserRole.customer, UserRole.shop_owner),
   UserDataController.changePassword
 );
+router.patch(
+  "/approved-shopowner-request/:id",
+  RoleValidation(UserRole.admin),
+  UserDataController.approvedShopOwnerRequest
+);
 
 
 
